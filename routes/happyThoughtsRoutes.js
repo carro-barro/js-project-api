@@ -3,7 +3,7 @@ import { authenticateUser } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
 
-router.get("/happy-thoughts", async (req, res) => {
+router.get("/", async (req, res) => {
 
   const { minLikes } = req.query
   console.log("min likes", minLikes)
@@ -39,7 +39,7 @@ router.get("/happy-thoughts", async (req, res) => {
   }
 })
 
-router.post("/happy-thoughts", authenticateUser, (req, res) => {
+router.post("/", authenticateUser, (req, res) => {
   const body = req.body
 
   const newThought = {
@@ -56,7 +56,7 @@ router.post("/happy-thoughts", authenticateUser, (req, res) => {
 })
 
 
-router.get("/happy-thoughts/:id", (req, res) => {
+router.get("/:id", (req, res) => {
   const id = req.params.id
 
   const happyThought = data.find((happyThought) => happyThought._id === id)
@@ -69,7 +69,7 @@ router.get("/happy-thoughts/:id", (req, res) => {
 
 })
 
-router.delete("/happy-thoughts/:id", authenticateUser, (req, res) => {
+router.delete("/:id", authenticateUser, (req, res) => {
   const { id } = req.params
   const thought = data.find((thought) => String(thought._id) === String(id))
 
