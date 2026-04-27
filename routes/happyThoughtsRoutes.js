@@ -1,5 +1,6 @@
 import express from "express"
 import { authenticateUser } from "../middleware/authMiddleware.js"
+import { HappyThought } from "../models/HappyThought.js"
 
 const router = express.Router()
 
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    const filteredMessages = await Thought.find(query)
+    const filteredMessages = await HappyThought.find(query)
 
     if (filteredMessages.length === 0) {
       return res.status(404).json({
@@ -39,49 +40,81 @@ router.get("/", async (req, res) => {
   }
 })
 
-router.post("/", authenticateUser, (req, res) => {
-  const body = req.body
+router.post("/", authenticateUser, async (req, res) => {
+  const { message } = req.body
 
-  const newThought = {
-    _id: data.length + 1,
-    message: body.message,
-    hearts: body.hearts,
-    createdAt: body.createdAt,
-    __v: body.__v
+  try {
+    const newHappyThought = await new HappyThought({ message }).save()
+
+    res.status(201).json({
+      success: true,
+      response: newHappyThought,
+      message: "Happy thought created successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      response: error,
+      message: "Couldn't create happy thought"
+    })
   }
-
-  data.push(newThought)
-
-  res.json(newThought)
 })
 
 
 router.get("/:id", (req, res) => {
-  const id = req.params.id
+  const { _id } = req.params
 
-  const happyThought = data.find((happyThought) => happyThought._id === id)
+  try {
+    const happyThought = HappyThought.findById(_id)
 
-  if (!happyThought) {
-    return res.status(404).json({ error: `happy thought with id ${id} does not exist` })
+    if (!happyThought) {
+      return res.status(404).json({ 
+        success: false,
+        response: null,
+        message: "Happy thought not found"
+       })
+    }
+
+    res.status(200).json({
+      success: true,
+      respone: happyThought
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      response: error,
+      message: "Happy thought couldn't be found"
+    })
   }
-
-  res.json(happyThought)
 
 })
 
 router.delete("/:id", authenticateUser, (req, res) => {
-  const { id } = req.params
-  const thought = data.find((thought) => String(thought._id) === String(id))
+  const { _id } = req.params
 
-  if (!thought) {
-    return res.status(404).json({error: `thought with id ${id} does not exist`})
+  try {
+    const deletedThought = HappyThought.findByIdAndDelete(_id)
+
+    if (!deletedThought) {
+      return res.status(404).json({
+        success: false,
+        response: null,
+        message: "Happy thought not found"
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      response: deletedThought,
+      message: "Happy thought deleted successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      response: error,
+      message: "Error deleting happy thought"
+    })
   }
-
-  const newThoughts = data.filter((thought) => String(thought._id) !== String(id))
-
-  data = newThoughts
-
-  res.json(thought)
 })
 
 export default router

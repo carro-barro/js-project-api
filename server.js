@@ -3,11 +3,10 @@ import express from "express"
 import listEndpoints from "express-list-endpoints"
 import "dotenv/config"
 import mongoose from "mongoose"
-import happyData from "./data.json" with { type: "json" }
 import happyThoughtsRoutes from "./routes/happyThoughtsRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 
-let data = happyData
+
 const mongoUrl = process.env.MONGO_URL
 mongoose.connect(mongoUrl)
 // Defines the port the app will run on. Defaults to 8080, but can be overridden
@@ -20,32 +19,6 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const thoughtsSchema = new mongoose.Schema ({
-message: {
-  type: String,
-  required: true
-},
-hearts: {
-  type: Number
-},
-createdAt: {
-  type: Date,
-  default: Date.now
-}
-})
-
-const Thought = mongoose.model("Thought", thoughtsSchema)
-
-if (process.env.RESET_DB === "true") {
-  const seedDataBase = async () => {
-    await Thought.deleteMany()
-
-    data.forEach(thought => {
-      new Thought(thought).save()
-    })
-  }
-  seedDataBase()
-}
 
 // Start defining your routes here
 app.get("/", (req, res) => {
