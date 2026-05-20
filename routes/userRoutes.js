@@ -1,8 +1,11 @@
 import express from "express"
 import bcrypt from "bcrypt"
 import { User } from "../models/User.js"
+import { seedingUsers } from "../seedingDatabase/seedingUsers.js"
 
 const router = express.Router()
+
+seedingUsers()
 
 router.post("/signup", async (req, res) => {
   try {

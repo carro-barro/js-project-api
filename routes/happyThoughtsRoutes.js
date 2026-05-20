@@ -96,6 +96,7 @@ router.delete("/:id", authenticateUser, async (req, res) => {
   const { id } = req.params
 
   try {
+    
     const deletedThought = await HappyThought.findByIdAndDelete(id)
 
     if (!deletedThought) {
