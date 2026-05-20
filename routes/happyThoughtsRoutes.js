@@ -64,11 +64,11 @@ router.post("/", authenticateUser, async (req, res) => {
 })
 
 
-router.get("/:id", (req, res) => {
-  const { _id } = req.params
+router.get("/:id", async (req, res) => {
+  const { id } = req.params
 
   try {
-    const happyThought = HappyThought.findById(_id)
+    const happyThought = await HappyThought.findById(id)
 
     if (!happyThought) {
       return res.status(404).json({ 
@@ -92,11 +92,11 @@ router.get("/:id", (req, res) => {
 
 })
 
-router.delete("/:id", authenticateUser, (req, res) => {
-  const { _id } = req.params
+router.delete("/:id", authenticateUser, async (req, res) => {
+  const { id } = req.params
 
   try {
-    const deletedThought = HappyThought.findByIdAndDelete(_id)
+    const deletedThought = await HappyThought.findByIdAndDelete(id)
 
     if (!deletedThought) {
       return res.status(404).json({
