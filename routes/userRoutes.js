@@ -7,13 +7,13 @@ const router = express.Router()
 
 seedingUsers()
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", async (reqest, response) => {
   try {
-    const { email, password } = req.body
+    const { email, password } = reqest.body
     const existingUser = await User.findOne({ email: email.toLowerCase()})
 
     if (existingUser) {
-      return res.status(409).json({
+      return response.status(409).json({
         success: false,
         message: "An error occurred when creating the user"
       })
@@ -24,12 +24,12 @@ router.post("/signup", async (req, res) => {
 
     const user = new User({
       email,
-      password
+      password: hashedPassword
     })
 
     const savedUser = await user.save()
 
-    res.status(201).json({
+    response.status(201).json({
       success: true,
       message: "User created successfully",
       response: {
@@ -38,7 +38,7 @@ router.post("/signup", async (req, res) => {
     })
 
   } catch (error) {
-    res.status(400).json({
+    response.status(400).json({
       success: false,
       message: "failed to create user",
       response: error
@@ -46,32 +46,32 @@ router.post("/signup", async (req, res) => {
   }
 })
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (reqest, response) => {
   try {
-    const { email, password } = req.body
+    const { email, password } = reqest.body
     const user = await User.findOne({email: email.toLowerCase()})
 
     if (user && bcrypt.compareSync(password, user.password)) {
-      res.status(200).json({
+      response.status(200).json({
         success: true,
         message: "Login successful",
-        respone: {
+        response: {
           email: user.email,
           id: user._id,
           accessToken: user.accessToken
         }
       })
     } else {
-      res.status(401).json({
+      response.status(401).json({
         success: false,
         message: "Invalid email or password",
-        response: null
+        response: null 
       })
     }
   } catch (error) {
-    res.status(500).json({
+    response.status(500).json({
       success: false,
-      message: "Something wnet wrong during login",
+      message: "Something went wrong during login",
       response: error
     })
   }

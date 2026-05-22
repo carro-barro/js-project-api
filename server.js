@@ -21,10 +21,10 @@ app.use(express.json())
 
 
 // Start defining your routes here
-app.get("/", (req, res) => {
+app.get("/", (reqest, response) => {
   const endpoints = listEndpoints(app)
 
-  res.json({
+  response.json({
     message: "Welcome to happy thoughts api",
     endpoints: endpoints
   })
