@@ -59,7 +59,9 @@ router.post("/signup", async (reqest, response) => {
       success: true,
       message: "User created successfully",
       response: {
-        savedUser: savedUser
+        email: savedUser.email,
+        id: savedUser._id,
+        accessToken: savedUser.accessToken
       }
     })
 
