@@ -19,7 +19,7 @@ router.get("/", async (request, response) => {
   }
 
   try {
-    const filteredMessages = await HappyThought.find(query)
+    const filteredMessages = await HappyThought.find(query).sort({ createdAt: "desc" })
 
     if (filteredMessages.length === 0) {
       return response.status(404).json({
