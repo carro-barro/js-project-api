@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 export const seedingUsers = async () => {
   const salt = 10
 
-  if (process.env.RESET_DB === "true") {
+  if (process.env.RESET_DB_USERS === "true") {
     console.log("Resetting seeding database...");
     await User.deleteMany()
   }
