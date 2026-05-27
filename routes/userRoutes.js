@@ -49,7 +49,8 @@ router.post("/signup", async (reqest, response) => {
       firstName,
       lastName,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      accessToken
     })
 
     const savedUser = await user.save()
