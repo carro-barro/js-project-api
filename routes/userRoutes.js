@@ -30,9 +30,9 @@ router.get("/:id", async (request, response) => {
   }
 })
 
-router.post("/signup", async (reqest, response) => {
+router.post("/signup", async (request, response) => {
   try {
-    const { firstName, lastName, email, password } = reqest.body
+    const { firstName, lastName, email, password } = request.body
     const existingUser = await User.findOne({ email: email.toLowerCase()})
 
     if (existingUser) {
@@ -73,9 +73,9 @@ router.post("/signup", async (reqest, response) => {
   }
 })
 
-router.post("/login", async (reqest, response) => {
+router.post("/login", async (request, response) => {
   try {
-    const { email, password } = reqest.body
+    const { email, password } = request.body
     const user = await User.findOne({email: email.toLowerCase()})
 
     if (user && bcrypt.compareSync(password, user.password)) {

@@ -21,7 +21,7 @@ app.use(express.json())
 
 
 // Start defining your routes here
-app.get("/", (reqest, response) => {
+app.get("/", (request, response) => {
   const endpoints = listEndpoints(app)
 
   response.json({

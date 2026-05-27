@@ -7,9 +7,9 @@ const router = express.Router()
 
 seedingThoughts()
 
-router.get("/", async (reqest, response) => {
+router.get("/", async (request, response) => {
 
-  const { minLikes } = reqest.query
+  const { minLikes } = request.query
   console.log("min likes", minLikes)
 
   const query = {}
@@ -43,8 +43,8 @@ router.get("/", async (reqest, response) => {
   }
 })
 
-router.post("/", authenticateUser, async (reqest, response) => {
-  const { message } = reqest.body
+router.post("/", authenticateUser, async (request, response) => {
+  const { message } = request.body
 
   try {
     const newHappyThought = await new HappyThought({ message }).save()
@@ -64,8 +64,8 @@ router.post("/", authenticateUser, async (reqest, response) => {
 })
 
 
-router.get("/:id", async (reqest, response) => {
-  const { id } = reqest.params
+router.get("/:id", async (request, response) => {
+  const { id } = request.params
 
   try {
     const happyThought = await HappyThought.findById(id)
@@ -92,8 +92,8 @@ router.get("/:id", async (reqest, response) => {
 
 })
 
-router.delete("/:id", authenticateUser, async (reqest, response) => {
-  const { id } = reqest.params
+router.delete("/:id", authenticateUser, async (request, response) => {
+  const { id } = request.params
 
   try {
     

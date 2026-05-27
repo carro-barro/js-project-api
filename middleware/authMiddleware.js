@@ -1,11 +1,11 @@
 import { User } from "../models/User.js"
 
-export const authenticateUser = async (reqest, response, next) => {
+export const authenticateUser = async (request, response, next) => {
   try {
-    const user = await User.findOne({ accessToken: req.header("Authorization").replace("Bearer", "")})
+    const user = await User.findOne({ accessToken: request.header("Authorization").replace("Bearer", "")})
 
     if (user) {
-      reqest.user = user
+      request.user = user
       next()
     } else {
       response.status(401).json({
