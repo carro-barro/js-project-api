@@ -7,9 +7,32 @@ const router = express.Router()
 
 seedingUsers()
 
+router.get("/:id", async (request, response) => {
+  try {
+  const { id } = request.params
+  const user = await User.findById(id)
+
+  if (user) {
+    response.status(200).json({
+      message: "Hej!!!! Välkommen till din sida, " + user.firstName + "!!!",
+      user
+    })
+  } else {
+    response.status(404).json({
+      error: "user not found"
+    })
+  }
+
+  } catch (error) {
+    response.status(400).json({
+      error: "invalid request"
+    })
+  }
+})
+
 router.post("/signup", async (reqest, response) => {
   try {
-    const { email, password } = reqest.body
+    const { firstName, lastName, email, password } = reqest.body
     const existingUser = await User.findOne({ email: email.toLowerCase()})
 
     if (existingUser) {
@@ -23,6 +46,8 @@ router.post("/signup", async (reqest, response) => {
     const hashedPassword = bcrypt.hashSync(password, salt)
 
     const user = new User({
+      firstName,
+      lastName,
       email,
       password: hashedPassword
     })
