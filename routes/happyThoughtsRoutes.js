@@ -1,11 +1,8 @@
 import express from "express"
 import { authenticateUser } from "../middleware/authMiddleware.js"
 import { HappyThought } from "../models/HappyThought.js"
-// import { seedingThoughts } from "../seedingDatabase/seedingThoughts.js"
 
 const router = express.Router()
-
-// seedingThoughts()
 
 router.get("/", async (request, response) => {
 

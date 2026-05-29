@@ -1,11 +1,8 @@
 import express from "express"
 import bcrypt from "bcrypt"
 import { User } from "../models/User.js"
-import { seedingUsers } from "../seedingDatabase/seedingUsers.js"
 
 const router = express.Router()
-
-seedingUsers()
 
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
