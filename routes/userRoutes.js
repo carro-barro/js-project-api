@@ -7,6 +7,11 @@ const router = express.Router()
 
 seedingUsers()
 
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
 router.get("/:id", async (request, response) => {
   try {
   const { id } = request.params
@@ -33,7 +38,17 @@ router.get("/:id", async (request, response) => {
 router.post("/signup", async (request, response) => {
   try {
     const { firstName, lastName, email, password } = request.body
-    const existingUser = await User.findOne({ email: email.toLowerCase()})
+
+    if(!email || !validateEmail(email)) {
+      return response.status(400).json({
+        success: false,
+        message: "Invalid email format"
+      })
+    }
+
+    const normalizedEmail = email.toLowerCase()
+
+    const existingUser = await User.findOne({ email: normalizedEmail})
 
     if (existingUser) {
       return response.status(409).json({
@@ -42,13 +57,14 @@ router.post("/signup", async (request, response) => {
       })
     }
 
+
     const salt = bcrypt.genSaltSync()
     const hashedPassword = bcrypt.hashSync(password, salt)
 
     const user = new User({
       firstName,
       lastName,
-      email,
+      email: normalizedEmail,
       password: hashedPassword
     })
 
@@ -68,7 +84,7 @@ router.post("/signup", async (request, response) => {
     response.status(400).json({
       success: false,
       message: "failed to create user",
-      response: error
+      response: error.message
     })
   }
 })
@@ -76,7 +92,17 @@ router.post("/signup", async (request, response) => {
 router.post("/login", async (request, response) => {
   try {
     const { email, password } = request.body
-    const user = await User.findOne({email: email.toLowerCase()})
+    
+    if(!email || !validateEmail(email)) {
+      return response.status(400).json({
+        success: false,
+        message: "Invalid email format"
+      })
+    }
+
+    const normalizedEmail = email.toLowerCase()
+
+    const user = await User.findOne({email: normalizedEmail})
 
     if (user && bcrypt.compareSync(password, user.password)) {
       response.status(200).json({
