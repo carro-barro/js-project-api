@@ -30,6 +30,11 @@ app.get("/", (request, response) => {
   })
 })
 
+// Wake up API with cron-job, scheduled to end: 1 july 2026 kl: 13:00
+app.get('/ping', (request, response) => {
+  response.status(200).send('pong');
+});
+
 app.use("/happy-thoughts", happyThoughtsRoutes)
 app.use("/users", userRoutes)
 
