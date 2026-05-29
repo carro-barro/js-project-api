@@ -120,38 +120,9 @@ router.delete("/:id", authenticateUser, async (request, response) => {
       message: "Error deleting happy thought"
     })
   }
-}),
-
-router.patch("/:id/like", async (request, response) => {
-  const { id } = request.params
-
-  try {
-    const happyThought = await HappyThought.findByIdAndUpdate(id, { $inc: {hearts: 1}}, { new: true })
-
-    if (!happyThought) {
-      return response.status(404).json({
-        success: false,
-        response: null,
-        message: "Happy thought not found"
-      })
-    }
-
-    response.status(200).json({
-      success: true,
-      response: happyThought,
-      message: "Happy thought liked successfully"
-    })
-  } catch (error) {
-    response.status(500).json({
-      success: false,
-      response: error,
-      message: "Error liking happy thought"
-    })
-  }
-
 })
 
-router.patch("/:id", async (request, response) => {
+router.patch("/:id", authenticateUser, async (request, response) => {
   const { id } = request.params
   const { message } = request.body
 
@@ -189,5 +160,35 @@ router.patch("/:id", async (request, response) => {
     })
   }
 })
+
+router.patch("/:id/like", async (request, response) => {
+  const { id } = request.params
+
+  try {
+    const happyThought = await HappyThought.findByIdAndUpdate(id, { $inc: {hearts: 1}}, { new: true })
+
+    if (!happyThought) {
+      return response.status(404).json({
+        success: false,
+        response: null,
+        message: "Happy thought not found"
+      })
+    }
+
+    response.status(200).json({
+      success: true,
+      response: happyThought,
+      message: "Happy thought liked successfully"
+    })
+  } catch (error) {
+    response.status(500).json({
+      success: false,
+      response: error,
+      message: "Error liking happy thought"
+    })
+  }
+
+})
+
 
 export default router
