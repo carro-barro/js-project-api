@@ -1,4 +1,5 @@
 import express from "express"
+import mongoose from "mongoose"
 import { authenticateUser } from "../middleware/authMiddleware.js"
 import { HappyThought } from "../models/HappyThought.js"
 
@@ -122,7 +123,9 @@ router.delete("/:id", authenticateUser, async (request, response) => {
       })
     }
 
-    if (!thought.author || !thought.author.equals(request.user._id)) {
+    // säker ägarcheck: fungerar om author är ObjectId eller populated object
+    const authorId = thought.author?._id ? thought.author._id.toString() : thought.author?.toString()
+    if (!authorId || authorId !== request.user._id.toString()) {
       return response.status(403).json({
         success: false,
         response: null,
