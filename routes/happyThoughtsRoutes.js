@@ -15,7 +15,10 @@ router.get("/", async (request, response) => {
   }
 
   try {
-    const filteredMessages = await HappyThought.find(query).sort({ createdAt: "desc" })
+   
+    const filteredMessages = await HappyThought.find(query)
+      .sort({ createdAt: "desc" })
+      .populate("author", "firstName lastName")
 
     if (filteredMessages.length === 0) {
       return response.status(404).json({
@@ -44,7 +47,7 @@ router.post("/", authenticateUser, async (request, response) => {
 
   try {
     const newHappyThought = await new HappyThought({ message, author: request.user._id }).save()
-
+    await newHappyThought.populate("author", "firstName lastName")
     response.status(201).json({
       success: true,
       response: newHappyThought,
@@ -64,14 +67,13 @@ router.get("/:id", async (request, response) => {
   const { id } = request.params
 
   try {
-    const happyThought = await HappyThought.findById(id)
-
+    const happyThought = await HappyThought.findById(id).populate("author", "firstName lastName")
     if (!happyThought) {
       return response.status(404).json({
         success: false,
         response: null,
         message: "Happy thought not found"
-       })
+      })
     }
 
     response.status(200).json({
