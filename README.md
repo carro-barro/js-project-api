@@ -1,8 +1,7 @@
-# Project API
-
-render: https://happy-thoughts-api-o47r.onrender.com
 
 # Happy Thoughts API
+
+render link: https://happy-thoughts-api-o47r.onrender.com
 
 This project is a RESTful API built with **Node.js**, **Express**, and **MongoDB** (via Mongoose) that allows users to create, view, manage, and "like" happy thoughts. It also includes user authentication features to secure content management actions.
 
